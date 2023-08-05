@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 `%not_in%` = Negate(`%in%`)
 ```
 
-```{r}
+```{r static}
 # "C": county
 # "I": interstate
 # "M": common name
@@ -57,5 +57,10 @@ ggplot()+
   ) +
   theme_void()
 
+```
+
+
+```{r interactive}
 mapview(roads)
+
 ```
