@@ -9,6 +9,13 @@ urlcolor: blue
 always_allow_html: yes
 ---
   
+# Goals
+
+These are the goals: 
+
+- map of pierce county
+- pretty display
+- upload tracking
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = F, message = F, warning = F)
