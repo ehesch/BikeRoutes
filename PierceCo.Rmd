@@ -1,0 +1,61 @@
+---
+title: "Pierce County bike routes"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  bookdown::word_document2:
+    reference_docx: "../SupplementalFiles/counciltemplate.docx"
+    toc: true
+urlcolor: blue
+always_allow_html: yes
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = F, message = F, warning = F)
+library(tidyverse)
+library(tigris)
+library(sf)
+library(councilR)
+library(mapview)
+knitr::opts_chunk$set(
+  echo = F, message = F, warning = F, results = "hide",
+  fig.pos = "H"
+  # ,fig.height = 4
+  , dpi = 300
+)
+
+`%not_in%` = Negate(`%in%`)
+```
+
+```{r}
+# "C": county
+# "I": interstate
+# "M": common name
+# "O": other
+# "S": state regonized
+# "U": U.S.
+
+roads <- roads(state = "WI", county = "Pierce")
+ctus <- county_subdivisions(state = "WI", county = "Pierce")
+outline <- counties(state = "WI", cb = TRUE) %>%
+  filter(str_detect(NAME, "Pierce"))
+water <- linear_water(state = "WI", county = "Pierce")
+  
+ggplot()+
+  geom_sf(data = outline, fill = "transparent", lwd = 2, color = "black") +
+  geom_sf(data = ctus, fill = "transparent", color = "grey", lwd = 2)+
+  geom_sf(data = filter(roads, RTTYP %in% c("I", "S", "U")), lwd = 2) +
+  geom_sf(data = filter(roads, RTTYP == "C"), lwd = 1) +
+  geom_sf(data = filter(roads, RTTYP == "M"), lwd = .5) +
+  geom_sf(data = filter(water, !is.na(FULLNAME)), color = "cornflowerblue") +
+  # geom_sf(data = water, aes(color = FULLNAME)) + #color = "cornflowerblue") +
+  # geom_sf(data = roads, aes(color = RTTYP)) +
+    geom_sf_text(data = ctus, aes(label = NAME),
+    colour = "black",
+    check_overlap = F,
+    size = 2
+  ) +
+  theme_void()
+
+mapview(roads)
+```
